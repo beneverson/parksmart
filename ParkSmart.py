@@ -2,8 +2,9 @@ import os
 import pymongo
 import json
 from bson import json_util
+from urlparse import urlparse
 
-MONGO_URL = os.environ.get('MONGOGQ_URL')
+MONGO_URL = os.environ.get('MONGOHQ_URL')
 
 if MONGO_URL:
     conn = pymongo.Connection(MONGO_URL)
