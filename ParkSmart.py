@@ -1,9 +1,19 @@
-from pymongo import MongoClient
+import os
+import pymongo
 import json
 from bson import json_util
 
-client = MongoClient()
-db = client.nycparking
+MONGO_URL = os.environ.get('MONGOGQ_URL')
+
+if MONGO_URL:
+    conn = pymongo.Connection(MONGO_URL)
+    
+    db = conn[urlparse(MONGO_URL).path[1:]]
+    
+else: 
+    client = MongoClient()
+    
+    db = client.nycparking
 
 def getViolations(_lat, _lon, _rad, _limit = 100):
   
