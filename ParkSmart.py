@@ -11,7 +11,7 @@ if MONGO_URL:
     db = conn[urlparse(MONGO_URL).path[1:]]
     
 else: 
-    client = MongoClient()
+    client = pymongo.MongoClient()
     
     db = client.nycparking
 
