@@ -43,7 +43,7 @@ L.mapbox.accessToken = 'pk.eyJ1IjoiYmVuZXZlcnNvbiIsImEiOiI5NEZyMkxBIn0.keW7x9ghn
 var geojson;
 var map;
 $.ajax({
-    url: '/parksmart/api/getviolations/?lat=40.72715&lon=-73.99933&radius=0.010',
+    url: '/parksmart/api/getviolations/?lat=40.72715&lon=-73.99933&radius=0.01',
     type: 'GET',
     success: function(results) {
 		// 'results' holds the geojson object
