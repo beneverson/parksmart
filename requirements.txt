@@ -3,6 +3,7 @@ Jinja2==2.7.3
 MarkupSafe==0.23
 Werkzeug==0.9.6
 geojson==1.0.7
+gunicorn==19.1.1
 itsdangerous==0.24
 pymongo==2.7.2
 wsgiref==0.1.2
