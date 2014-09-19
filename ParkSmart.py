@@ -3,7 +3,6 @@ import pymongo
 import json
 from bson import json_util
 from urlparse import urlparse
-from geojson import Feature, Point
 
 MONGO_URL = os.environ.get('MONGOHQ_URL')
 

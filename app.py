@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from geojson import Feature, Point
+import geojson
 import ParkSmart
 
 app = Flask(__name__)
@@ -21,9 +21,10 @@ def getviolations():
     # convert this to geojson
     geojson_violations = []
     for doc in _violations:
-        geojson_violations.append(Feature(geometry=Point(doc['latitude'], doc['longitude'])))
+        geojson_violations.append(geojson.Feature(geometry=geojson.Point(doc['latitude'], doc['longitude'])))
+        
     # return the data                                                                  
-    return jsonify(data=geojson_violations)
+    return geojson.dumps(geojson_violations)
     
 if __name__ == '__main__':
     app.run(debug=True)
