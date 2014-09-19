@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>ParkSmart</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.js'></script>
+<script src="{{ url_for('static', filename='jquery-2.1.1.min.js') }}"></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.css' rel='stylesheet' />
+<style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+</head>
+<body>
+<style>
+.legend label,
+.legend span {
+  display:block;
+  float:left;
+  height:15px;
+  width:20%;
+  text-align:center;
+  font-size:9px;
+  color:#808080;
+  }
+</style>
+
+<div id='map'></div>
+
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoiYmVuZXZlcnNvbiIsImEiOiI5NEZyMkxBIn0.keW7x9ghnVE_rOhxA4dYKw';
+var map = L.mapbox.map('map', 'beneverson.ja06dcjc', {
+	fadeAnimation: false
+}).setView([40.7262, -73.962], 13);
+
+$.ajax({
+    url: '/get_stations',
+    type: 'GET',
+    success: function(results) {
+	  var mylayer = L.heatLayer([], { radius: 25, max: 1.0, blur: 15})
+      _stations = results.stations;
+	  var current_stations = []; // array to hold our latLng objects
+	  // cycle through each station
+      for (i = 0; i < _stations.length; i++) {
+		  // add one point to the map for each free bike at the station
+		  for (j = 0; j < _stations[i].numbikes; j++){
+			  current_stations.push(L.latLng(_stations[i].latLng));
+		  }  
+      }
+	  // set the data on the heatmap layer
+	  heat.setLatLngs(current_stations);
+	  // and add it to the map
+	  heat.addTo(map);
+    }
+});
+
+</script>
+</body>
+</html>

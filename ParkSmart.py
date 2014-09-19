@@ -3,6 +3,7 @@ import pymongo
 import json
 from bson import json_util
 from urlparse import urlparse
+from geojson import Feature, Point
 
 MONGO_URL = os.environ.get('MONGOHQ_URL')
 
@@ -17,7 +18,7 @@ else:
     db = client.nycparking
 
 def getViolations(_lat, _lon, _rad, _limit = 100):
-  
+    
     # retrieve 10 violations near _lat, _lon within a radius of _rad 
     _cursor = db.violationhistory.find({ 'loc': { '$geoWithin': { '$center' : [ [float(_lon), float(_lat)], float(_rad) ] } }}).limit(_limit)
     
