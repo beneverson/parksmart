@@ -24,7 +24,7 @@ def getviolations():
         geojson_violations.append(geojson.Feature(geometry=geojson.Point(doc['latitude'], doc['longitude'])))
         
     # return the data                                                                  
-    return geojson.dumps(geojson_violations)
+    return jsonify(data=_violations)
     
 if __name__ == '__main__':
     app.run(debug=True)
