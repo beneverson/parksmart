@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import geojson
 import ParkSmart
 
@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     # render the html page
-    return "Hello, world!"
+    return render_template('index.html')
     
 @app.route('/parksmart/api/getviolations/', methods=['GET'])
 def getviolations():
@@ -21,10 +21,10 @@ def getviolations():
     # convert this to geojson
     geojson_violations = []
     for doc in _violations:
-        geojson_violations.append(geojson.Feature(geometry=geojson.Point(doc['latitude'], doc['longitude'])))
+        geojson_violations.append(geojson.Feature(geometry=geojson.Point(doc['loc'])))
         
-    # return the data                                                                  
-    return jsonify(data=_violations)
+    # return the data as geojson                                                                  
+    return jsonify(data=geojson_violations)
     
 if __name__ == '__main__':
     app.run(debug=True)

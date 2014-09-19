@@ -24,37 +24,35 @@
   font-size:9px;
   color:#808080;
   }
+ .ui-control {
+    background:#fff;
+    position:absolute;
+    top:10px;
+    right:10px;
+    padding:10px;
+    z-index:100;
+    border-radius:3px;
+  }
 </style>
 
 <div id='map'></div>
 
 <script>
 L.mapbox.accessToken = 'pk.eyJ1IjoiYmVuZXZlcnNvbiIsImEiOiI5NEZyMkxBIn0.keW7x9ghnVE_rOhxA4dYKw';
-var map = L.mapbox.map('map', 'beneverson.ja06dcjc', {
-	fadeAnimation: false
-}).setView([40.7262, -73.962], 13);
 
+var geojson;
+var map;
 $.ajax({
-    url: '/get_stations',
+    url: '/parksmart/api/getviolations/?lat=40.72715&lon=-73.99933&radius=0.010',
     type: 'GET',
     success: function(results) {
-	  var mylayer = L.heatLayer([], { radius: 25, max: 1.0, blur: 15})
-      _stations = results.stations;
-	  var current_stations = []; // array to hold our latLng objects
-	  // cycle through each station
-      for (i = 0; i < _stations.length; i++) {
-		  // add one point to the map for each free bike at the station
-		  for (j = 0; j < _stations[i].numbikes; j++){
-			  current_stations.push(L.latLng(_stations[i].latLng));
-		  }  
-      }
-	  // set the data on the heatmap layer
-	  heat.setLatLngs(current_stations);
-	  // and add it to the map
-	  heat.addTo(map);
+		// 'results' holds the geojson object
+		//console.log(results.data);
+		geojson = results.data;
+		map = L.mapbox.map('map', 'beneverson.ja06dcjc').setView([40.72715, -73.99933], 17	).featureLayer.setGeoJSON(geojson);
     }
 });
-
+ 
 </script>
 </body>
 </html>

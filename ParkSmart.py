@@ -4,7 +4,8 @@ import json
 from bson import json_util
 from urlparse import urlparse
 
-MONGO_URL = os.environ.get('MONGOHQ_URL')
+#MONGO_URL = os.environ.get('MONGOHQ_URL')
+MONGO_URL = 'mongodb://ben:nosreve@kahana.mongohq.com:10098/app29696990'
 
 if MONGO_URL:
     conn = pymongo.Connection(MONGO_URL)
@@ -16,7 +17,7 @@ else:
     
     db = client.nycparking
 
-def getViolations(_lat, _lon, _rad, _limit = 100):
+def getViolations(_lat, _lon, _rad, _limit = 10):
     
     # retrieve 10 violations near _lat, _lon within a radius of _rad 
     _cursor = db.violationhistory.find({ 'loc': { '$geoWithin': { '$center' : [ [float(_lon), float(_lat)], float(_rad) ] } }}).limit(_limit)
