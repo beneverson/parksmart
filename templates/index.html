@@ -41,18 +41,25 @@
 L.mapbox.accessToken = 'pk.eyJ1IjoiYmVuZXZlcnNvbiIsImEiOiI5NEZyMkxBIn0.keW7x9ghnVE_rOhxA4dYKw';
 
 var geojson;
-var map;
+var map = L.mapbox.map('map', 'beneverson.ja06dcjc').setView([40.72715, -73.99933], 17);
+if (L.Browser.mobile) {
+	map.locate({setView: true, maxZoom: 17});
+} 
+
+var mapCenter = map.getCenter();
+var mURL = '/parksmart/api/getgoodspots/?lat=' + mapCenter.lat.toString() + '&lon=' + mapCenter.lng.toString() + '&radius=0.1';
+
 $.ajax({
-    url: '/parksmart/api/getviolations/?lat=40.72715&lon=-73.99933&radius=0.1',
+    url: mURL,
     type: 'GET',
     success: function(results) {
 		// 'results' holds the geojson object
 		//console.log(results.data);
-		geojson = results.data;
-		map = L.mapbox.map('map', 'beneverson.ja06dcjc').setView([40.72715, -73.99933], 17	).featureLayer.setGeoJSON(geojson);
+		console.log("Success!!!");
+		map.featureLayer.setGeoJSON(results.data);
+		map 
     }
 });
- 
 </script>
 </body>
 </html>
