@@ -34,6 +34,8 @@ def getgoodspots():
     _radius = request.args.get('radius')
     # query the database
     _violations = ParkSmart.getGoodSpots(_lat, _lon, _radius)
+    
+    print "Reached!!"
      
     # convert this to geojson
     geojson_violations = []

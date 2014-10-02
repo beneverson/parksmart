@@ -47,15 +47,13 @@ if (L.Browser.mobile) {
 } 
 
 var mapCenter = map.getCenter();
-var mURL = '/parksmart/api/getgoodspots/?lat=' + mapCenter.lat.toString() + '&lon=' + mapCenter.lng.toString() + '&radius=0.1';
+var mURL = '/parksmart/api/getgoodspots/?lat=' + mapCenter.lat.toString() + '&lon=' + mapCenter.lng.toString() + '&radius=0.0025';
 
 $.ajax({
     url: mURL,
     type: 'GET',
     success: function(results) {
 		// 'results' holds the geojson object
-		//console.log(results.data);
-		console.log("Success!!!");
 		map.featureLayer.setGeoJSON(results.data);
 		map 
     }

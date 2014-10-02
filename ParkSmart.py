@@ -5,8 +5,8 @@ from bson import json_util
 from urlparse import urlparse
 import datetime
 
-MONGO_URL = os.environ.get('MONGOHQ_URL')
-#MONGO_URL = 'mongodb://ben:nosreve@kahana.mongohq.com:10098/app29696990'
+#MONGO_URL = os.environ.get('MONGOHQ_URL')
+MONGO_URL = 'mongodb://ben:nosreve@kahana.mongohq.com:10098/app29696990'
 
 if MONGO_URL:
     conn = pymongo.Connection(MONGO_URL)
@@ -38,16 +38,19 @@ def getGoodSpots(_lat, _lon, _rad):
     # first get a cursor for all tickets within _rad of _lat, _lon
     # issued on the current weekday
     # at or before the current hour
-    _cursor = db.violationhistory.find({ 'loc': { '$geoWithin': { '$center' : [ [float(_lon), float(_lat)], float(_rad) ] } }, 
+    _cursorlist = list(db.violationhistory.find({ 'loc': { '$geoWithin': { '$center' : [ [float(_lon), float(_lat)], float(_rad) ] } }, 
                                      'weekday': datetime.datetime.today().weekday(),
-                                        'hour': { '$lte': datetime.datetime.today().time().hour }})
+                                        'hour': { '$lte': datetime.datetime.today().time().hour }}))
     
     _violations = []
+    i = 0
     # filter the results 
-    for doc in _cursor: 
+    for doc in _cursorlist:
+        i += 1
         # if the violation occured at the current hour, make sure it occured before the current minute
         if doc['hour'] != datetime.datetime.today().time().hour or (doc['hour'] == datetime.datetime.today().time().hour and doc['minute'] < datetime.datetime.today().time().minute):
             doc.pop('_id') # remove the mongo id tag, not serializable
             _violations.append(doc) # append the violation to the _violations list
             
+    print "Reached end of cursor loop."     
     return _violations 
