@@ -30,24 +30,24 @@ def getViolations(_lat, _lon, _rad, _limit = 1000):
         
     return _violations # re
 
-def getGoodSpots(_lat, _lon, _rad, _limit = 100):
+def getGoodSpots(_lat, _lon, _rad):
     
     # retrieve all the tickets that were issued near _lat and _lon, within _rad, 
     # and were already issued on this weekday
     
     # first get a cursor for all tickets within _rad of _lat, _lon
-    _cursor = db.violationhistory.find({ 'loc': { '$geoWithin': { '$center' : [ [float(_lon), float(_lat)], float(_rad) ] } }})
+    # issued on the current weekday
+    # at or before the current hour
+    _cursor = db.violationhistory.find({ 'loc': { '$geoWithin': { '$center' : [ [float(_lon), float(_lat)], float(_rad) ] } }, 
+                                     'weekday': datetime.datetime.today().weekday(),
+                                        'hour': { '$lte': datetime.datetime.today().time().hour }})
     
     _violations = []
-    i = 0
     # filter the results 
     for doc in _cursor: 
-        if doc['datetime'].weekday() == datetime.datetime.today().weekday(): # if we're dealing with the correct weekday
-            if doc['datetime'].time() <  datetime.datetime.today().time(): # and the violation was already issued
-                doc.pop('_id') # remove the mongo id tag, not serializable
-                _violations.append(doc) # append the violation to the _violations list
-                if i > _limit:
-                    break
-                i += 1
+        # if the violation occured at the current hour, make sure it occured before the current minute
+        if doc['hour'] != datetime.datetime.today().time().hour or (doc['hour'] == datetime.datetime.today().time().hour and doc['minute'] < datetime.datetime.today().time().minute):
+            doc.pop('_id') # remove the mongo id tag, not serializable
+            _violations.append(doc) # append the violation to the _violations list
             
     return _violations 
