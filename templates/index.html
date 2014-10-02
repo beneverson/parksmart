@@ -40,24 +40,33 @@
 <script>
 L.mapbox.accessToken = 'pk.eyJ1IjoiYmVuZXZlcnNvbiIsImEiOiI5NEZyMkxBIn0.keW7x9ghnVE_rOhxA4dYKw';
 
-var geojson;
-var map = L.mapbox.map('map', 'beneverson.ja06dcjc').setView([40.72715, -73.99933], 17);
-if (L.Browser.mobile) {
-	map.locate({setView: true, maxZoom: 17});
-} 
+var map = L.mapbox.map('map', 'beneverson.ja06dcjc');
 
-var mapCenter = map.getCenter();
-var mURL = '/parksmart/api/getgoodspots/?lat=' + mapCenter.lat.toString() + '&lon=' + mapCenter.lng.toString() + '&radius=0.0025';
+var myLayer = L.mapbox.featureLayer().addTo(map);
 
-$.ajax({
-    url: mURL,
-    type: 'GET',
-    success: function(results) {
-		// 'results' holds the geojson object
-		map.featureLayer.setGeoJSON(results.data);
-		map 
-    }
+map.locate();
+
+map.on('locationfound', function(e) {
+	
+	map.fitBounds(e.bounds);
+	
+	var mURL = '/parksmart/api/getgoodspots/?lat=' + e.latlng.lat.toString() + '&lon=' + e.latlng.lng.toString() + '&radius=0.0025';
+	
+	$.ajax({
+	    url: mURL,
+	    type: 'GET',
+	    success: function(results) {
+			// 'results' holds the geojson object
+			myLayer.setGeoJSON(results.data); 
+	    }
+	});
+
 });
+
+
+
+
+
 </script>
 </body>
 </html>
