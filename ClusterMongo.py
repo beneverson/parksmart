@@ -20,15 +20,17 @@ def expandCluster(_doc, _neighborDocs, _clusterId, _maxDistance, _minPoints, _pr
     while i < len(_neighborDocs):  # go thru all neighbor docs
         _neighbor = _neighborDocs[i]
         # if this document was not visited
-        if _neighbor['_id'] not in visitedIds:
+        if str(_neighbor['_id']) not in visitedIds:
             # mark as visited by adding to the lookup table
-            visitedIds.append(_neighbor['_id'])
+            visitedIds.append(str(_neighbor['_id']))
             # find documents near '_neighbor' 
             newNeighborDocs = list(collection.find({'loc' : {'$near' : {'$geometry': _neighbor['loc'], 
                                                                         '$maxDistance' : _maxDistance} } , 'precinct': _precinctID}))
             # expand the cluster if we can
             if len(newNeighborDocs) >= _minPoints:
-                _neighborDocs.extend(newNeighborDocs) 
+                # create a new list that contains only neigbors we haven't seen before
+                differentNeighborDocs = [aDoc for aDoc in newNeighborDocs if not any(str(_d['_id']) == str(aDoc['_id']) for _d in _neighborDocs)]
+                _neighborDocs.extend(differentNeighborDocs) 
         # if the neigbor has not yet been added to any cluster, add it to the current one
         if 'clusterid' not in _neighbor:
             collection.update({'_id' : _neighbor['_id']}, 
@@ -45,9 +47,9 @@ def DBSCAN_Mongo(_collection, _maxDistance, _minPoints, _precinctID):
     findall_cursor = list(_collection.find()) # find all docs in the db
     
     for _doc in findall_cursor:
-        if _doc['_id'] not in visitedIds:
+        if str(_doc['_id']) not in visitedIds:
             # mark as visited by adding to the lookup table
-            visitedIds.append(_doc['_id'])
+            visitedIds.append(str(_doc['_id']))
             # find all the points in this area
             neighborDocs = list(collection.find({'loc' : {'$near' : {'$geometry': _doc['loc'], 
                                                                         '$maxDistance' : _maxDistance} }, 'precinct': _precinctID}))
