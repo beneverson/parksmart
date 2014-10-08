@@ -6,7 +6,7 @@ from urlparse import urlparse
 import datetime
 
 #MONGO_URL = os.environ.get('MONGOHQ_URL')
-MONGO_URL = 'mongodb://ben:nosreve@kahana.mongohq.com:10098/app29696990'
+#MONGO_URL = 'mongodb://ben:nosreve@kahana.mongohq.com:10098/app29696990'
 
 if MONGO_URL:
     conn = pymongo.Connection(MONGO_URL)
