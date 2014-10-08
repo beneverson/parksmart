@@ -1,5 +1,6 @@
 ## cluster the violations in the live mongodb collection
 import pymongo
+import os
 
 MONGO_URI = os.environ.get('MONGOLAB_URI')
 conn = pymongo.Connection(MONGO_URI)
