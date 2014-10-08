@@ -3,7 +3,7 @@ import pymongo
 import os
 from urlparse import urlparse
 
-MONGO_URI = os.environ.get('MONGOLAB_URI')
+MONGO_URI = 'mongodb://ben:nosreve@ds043210.mongolab.com:43210/heroku_app29696990'
 conn = pymongo.Connection(MONGO_URI)
 db = conn[urlparse(MONGO_URI).path[1:]]
 collection = db.violationhistory
@@ -17,8 +17,8 @@ def expandCluster(_doc, _neighborDocs, _clusterId, _maxDistance, _minPoints, _pr
                               upsert=False, multi=False)
    
     i = 0 # declare an index into _neighborDocs
-    while i < len(_neighborDocs):  # go thru all neighbor docs
-        _neighbor = _neighborDocs[i]
+    while _neighborDocs:  # go thru all neighbor docs
+        _neighbor = _neighborDocs.pop(0)
         # if this document was not visited
         if str(_neighbor['_id']) not in visitedIds:
             # mark as visited by adding to the lookup table
@@ -36,8 +36,6 @@ def expandCluster(_doc, _neighborDocs, _clusterId, _maxDistance, _minPoints, _pr
             collection.update({'_id' : _neighbor['_id']}, 
                               {'$set':{'clusterid' : clustername}}, 
                               upsert=False, multi=False)
-        # increment the index
-        i += 1
     return
 
 def DBSCAN_Mongo(_collection, _maxDistance, _minPoints, _precinctID):
