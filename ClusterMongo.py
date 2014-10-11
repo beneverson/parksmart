@@ -8,7 +8,6 @@ from time import strptime, mktime
 from datetime import datetime
 from scipy.spatial.distance import pdist, squareform
 from sklearn.cluster import DBSCAN
-import sklearn.neighbors.DistanceMetric
 
 # get connection to the mongodb instance
 MONGO_URI = 'mongodb://ben:nosreve@ds043210.mongolab.com:43210/heroku_app29696990'
