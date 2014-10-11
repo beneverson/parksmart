@@ -16,7 +16,7 @@ db = conn[urlparse(MONGO_URI).path[1:]]
 collection = db.violationhistory
 
 # open the violations in pandas
-violations = pd.read_csv('csvs/all_violations.csv', index_col=0)
+violations = pd.read_csv('all_violations.csv', index_col=0)
 # group the violations by precinct
 grouped = violations.groupby('precinct')
 
@@ -61,6 +61,7 @@ for name, group in grouped:
     clustered_df['clusterid'] = clusters
     # go through the cluster-assigned dataframe and add to 'aggregated_list'
     for index, row in clustered_df.iterrows():
+        unique_cluster = str(name) + "_" + row['clusterid']
         _thedate = createdate(row['violationtime'], row['violationdate'])
         if _thedate is not None:
             # create the geojson object
@@ -71,7 +72,7 @@ for name, group in grouped:
                     'minute':_thedate.time().minute,
                     'precinct':row['precinct'],
                     'loc':geoData,
-                    'clusterid':row['clusterid']}
+                    'clusterid':unique_cluster}
             aggregated_list.append(_violation)
     print "successfully clustered district " + str(name)
 
