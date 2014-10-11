@@ -6,7 +6,7 @@ import pandas as pd
 import geojson
 from time import strptime, mktime
 from datetime import datetime
-from sklearn.neighbors import DistanceMetric
+from scipy.spatial.distance import pdist
 from sklearn.cluster import DBSCAN
 
 # get connection to the mongodb instance
@@ -42,8 +42,6 @@ def createdate(_violationtime, _violationdate):
 # params for DBSCAN
 _eps = .00025
 _minpts = 3
-# distance metric
-dist = DistanceMetric.get_metric('euclidean')
 
 for name, group in grouped:
     # the list of violations to ultimately add to mongodb      
@@ -52,7 +50,7 @@ for name, group in grouped:
     # zip the lat lon, into a single vector
     X = [list(i) for i in zip(group.latitude, group.longitude)]
     # generate pairwise distance matrix
-    _pairwise = dist.pairwise(X)
+    _pairwise = pdist(X,'euclidean')
     # generate clusters
     clusters = DBSCAN(eps=_eps, min_samples=_minpts, metric='precomputed').fit_predict(_pairwise)
     # save the clustered df
