@@ -39,9 +39,6 @@ def createdate(_violationtime, _violationdate):
     except ValueError:
         return None
 
-# the list of violations to ultimately add to mongodb      
-aggregated_list = []
-
 # params for DBSCAN
 _eps = .00025
 _minpts = 3
@@ -49,6 +46,8 @@ _minpts = 3
 dist = DistanceMetric.get_metric('euclidean')
 
 for name, group in grouped:
+    # the list of violations to ultimately add to mongodb      
+    aggregated_list = []
     print "starting cluster of district " + str(name) 
     # zip the lat lon, into a single vector
     X = [list(i) for i in zip(group.latitude, group.longitude)]
@@ -74,9 +73,7 @@ for name, group in grouped:
                     'loc':geoData,
                     'clusterid':unique_cluster}
             aggregated_list.append(_violation)
-    print "successfully clustered district " + str(name)
-
-print "adding all clustered violations to mongodb"
-# add the entire aggregated list to the mongo instance
-db.violationhistory.insert(aggregated_list)
+    print "successfully clustered district " + str(name) + " adding to mongo"
+    db.violationhistory.insert(aggregated_list)
+    
 print "successfully clustered dataset!"
