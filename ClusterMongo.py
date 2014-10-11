@@ -8,6 +8,7 @@ from time import strptime, mktime
 from datetime import datetime
 from scipy.spatial.distance import pdist, squareform
 from sklearn.cluster import DBSCAN
+import numpy as np
 
 # get connection to the mongodb instance
 MONGO_URI = 'mongodb://ben:nosreve@ds043210.mongolab.com:43210/heroku_app29696990'
@@ -52,7 +53,7 @@ for name, group in grouped:
     # generate pairwise distance matrix
     #_pairwise = squareform(pdist(X,'euclidean'))
     # generate clusters
-    clusters = DBSCAN(eps=_eps, min_samples=_minpts, metric='euclidean').fit_predict(X)
+    clusters = DBSCAN(eps=_eps, min_samples=_minpts, metric='euclidean').fit_predict(np.array(X))
     # save the clustered df
     clustered_df = group.copy()
     clustered_df['clusterid'] = clusters
