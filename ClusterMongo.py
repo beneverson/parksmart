@@ -61,7 +61,7 @@ for name, group in grouped:
     clustered_df['clusterid'] = clusters
     # go through the cluster-assigned dataframe and add to 'aggregated_list'
     for index, row in clustered_df.iterrows():
-        unique_cluster = str(name) + "_" + row['clusterid']
+        unique_cluster = str(name) + "_" + str(row['clusterid'])
         _thedate = createdate(row['violationtime'], row['violationdate'])
         if _thedate is not None:
             # create the geojson object
