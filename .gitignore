@@ -2,3 +2,4 @@
 venv
 all_violations.csv
 test
+*.ipynb
