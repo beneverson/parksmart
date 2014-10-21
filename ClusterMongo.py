@@ -41,7 +41,7 @@ def createdate(_violationtime, _violationdate):
         return None
 
 # params for DBSCAN
-_eps = .00025
+_eps = .000175
 _minpts = 3
 
 for name, group in grouped:

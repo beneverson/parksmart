@@ -5,13 +5,12 @@ from bson import json_util
 from urlparse import urlparse
 import datetime
 
-#MONGO_URL = os.environ.get('MONGOHQ_URL')
-#MONGO_URL = 'mongodb://ben:nosreve@kahana.mongohq.com:10098/app29696990'
+MONGO_URI = os.environ.get('MONGOHQ_URI')
 
-if MONGO_URL:
-    conn = pymongo.Connection(MONGO_URL)
+if MONGO_URI:
+    conn = pymongo.Connection(MONGO_URI)
     
-    db = conn[urlparse(MONGO_URL).path[1:]]
+    db = conn[urlparse(MONGO_URI).path[1:]]
     
 else: 
     client = pymongo.MongoClient()
